@@ -1,0 +1,22 @@
+{
+  "name": "celengan-mikro-umkm",
+  "version": "1.0.0",
+  "description": "Platform Donasi Mikro Non-Tunai untuk Modal Usaha Keluarga Rentan - SDGs No Poverty",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "donasi-mikro",
+    "umkm",
+    "sdgs",
+    "no-poverty",
+    "waterfall"
+  ],
+  "author": "Celengan Mikro UMKM Team",
+  "license": "MIT"
+}

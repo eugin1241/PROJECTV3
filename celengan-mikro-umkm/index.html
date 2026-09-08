@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Celengan Mikro UMKM - Platform Donasi Mikro Non-Tunai Modal Usaha</title>
+  <meta name="description" content="Platform Donasi Mikro Non-Tunai untuk Modal Usaha Keluarga Rentan - SDGs No Poverty">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top System Notice Banner (Batasan Sistem & SDGs No Poverty) -->
+  <aside class="system-banner" aria-label="Informasi Kebijakan Penyaluran">
+    <div class="container">
+      <div class="banner-left">
+        <span class="banner-pill">SDGs No Poverty</span>
+        <span>🛡️ <strong>Prinsip Non-Tunai:</strong> Donasi tidak dicairkan tunai, melainkan disalurkan dalam bentuk alat/bahan usaha produktif.</span>
+      </div>
+      <div>
+        <span id="runningModeTag" class="mode-tag">Memeriksa Mode Sistem...</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Navigation Header -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <div class="brand" id="brandLogo" role="button" tabindex="0">
+          <div class="brand-icon">🌱</div>
+          <div class="brand-info">
+            <h1>Celengan Mikro UMKM</h1>
+            <span>Modal Usaha Keluarga Rentan</span>
+          </div>
+        </div>
+
+        <div class="nav-menu">
+          <button class="nav-link active" data-view="katalog">
+            <span>🏪</span> Katalog Warga
+          </button>
+          
+          <!-- Menu Khusus RT/RW -->
+          <button class="nav-link" id="navDaftarWarga" data-view="daftar-warga" style="display: none;">
+            <span>📝</span> Daftarkan Warga
+          </button>
+          <button class="nav-link" id="navRtDashboard" data-view="rt-dashboard" style="display: none;">
+            <span>📊</span> Dashboard RT/RW
+          </button>
+
+          <!-- Menu Khusus Admin -->
+          <button class="nav-link" id="navAdminVerify" data-view="admin-verify" style="display: none;">
+            <span>⚖️</span> Verifikasi Warga
+          </button>
+          <button class="nav-link" id="navAdminHistory" data-view="admin-history" style="display: none;">
+            <span>📜</span> History Donasi
+          </button>
+
+          <!-- Menu Khusus Donatur -->
+          <button class="nav-link" id="navDonaturDashboard" data-view="donatur-dashboard" style="display: none;">
+            <span>🤝</span> Riwayat Donasi
+          </button>
+
+          <!-- Menu Login / Register -->
+          <button class="nav-link" id="navAuth" data-view="auth">
+            <span>👤</span> Masuk / Daftar
+          </button>
+
+          <!-- Status User Login & Logout -->
+          <div id="userBadgeContainer" class="user-status" style="display: none;">
+            <span id="userRoleBadge" class="user-badge badge-donatur">Peran</span>
+            <span id="userDisplayName" style="font-weight: 600; font-size: 0.85rem;">Nama</span>
+            <button class="btn btn-outline btn-sm" id="btnLogout" title="Keluar dari sistem">
+              Keluar
+            </button>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <span class="hero-tag">Gotong Royong Modal Produktif</span>
+        <h2 class="hero-title">Bantu Keluarga Rentan Mandiri Lewat Donasi Mikro Non-Tunai</h2>
+        <p class="hero-desc">
+          Menghubungkan donatur dengan pelaku usaha mikro keluarga rentan yang telah diverifikasi oleh pengurus RT/RW dan Administrator. Bantuan langsung disalurkan dalam bentuk sarana kerja dan bahan baku usaha.
+        </p>
+        <div style="display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="App.routeTo('katalog')">
+            🏪 Lihat Usaha Warga
+          </button>
+          <button class="btn btn-outline" onclick="App.routeTo('auth')">
+            🔑 Masuk / Daftar Akun
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-features">
+        <div class="hero-feat-item">
+          <div class="hero-feat-icon">🎯</div>
+          <div class="hero-feat-text">
+            <h4>Bantuan Non-Tunai</h4>
+            <p>100% donasi dialokasikan untuk pembelian alat dan sarana usaha, bukan uang tunai konsumtif.</p>
+          </div>
+        </div>
+        <div class="hero-feat-item">
+          <div class="hero-feat-icon">🔍</div>
+          <div class="hero-feat-text">
+            <h4>Verifikasi Berjenjang</h4>
+            <p>Didata langsung oleh Pengurus RT/RW setempat dan divalidasi kelayakannya oleh Admin.</p>
+          </div>
+        </div>
+        <div class="hero-feat-item">
+          <div class="hero-feat-icon">🪙</div>
+          <div class="hero-feat-text">
+            <h4>Nominal Mikro & Fleksibel</h4>
+            <p>Masyarakat dapat berdonasi mulai nominal kecil (Rp 10.000) via QRIS dan transfer e-banking.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Container / Views -->
+  <main>
+    <div class="container">
+
+      <!-- ================= 1. VIEW KATALOG WARGA (PUBLIK & DONATUR) ================= -->
+      <section id="view-katalog" class="view-section active">
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-label">Total Donasi Terkumpul</div>
+            <div class="stat-value" id="statTotalDonasiTerkumpul">Rp 0</div>
+            <div class="stat-desc">Modal usaha produktif tersalurkan</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">UMKM Terverifikasi</div>
+            <div class="stat-value" id="statUmkmTerbantu">0 Keluarga</div>
+            <div class="stat-desc">Siap dan sedang dibantu donatur</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Skema Penyaluran</div>
+            <div class="stat-value" style="color: var(--secondary); font-size: 1.3rem;">100% Non-Tunai</div>
+            <div class="stat-desc">Pengadaan perlengkapan & bahan baku</div>
+          </div>
+        </div>
+
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">Daftar Usaha Warga Terverifikasi</h2>
+            <div class="card-subtitle">Pilih profil keluarga rentan binaan RT/RW yang ingin Anda dukung modal usahanya.</div>
+          </div>
+        </div>
+
+        <div class="warga-grid" id="katalogWargaGrid">
+          <!-- Diisi secara dinamis oleh App.loadKatalogWarga() -->
+        </div>
+      </section>
+
+      <!-- ================= 2. VIEW AUTH (LOGIN & REGISTRASI) ================= -->
+      <section id="view-auth" class="view-section">
+        <div class="auth-wrapper">
+          <div class="card">
+            <!-- Tabs Nav -->
+            <div class="auth-tabs-nav">
+              <button type="button" class="auth-tab-btn active" data-target="login">
+                🔑 Masuk (Login)
+              </button>
+              <button type="button" class="auth-tab-btn" data-target="register">
+                📝 Registrasi Akun Baru
+              </button>
+            </div>
+
+            <!-- FORM LOGIN (Use Case 2) -->
+            <div id="formLoginContainer">
+              <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 14px;">Masuk ke Sistem</h3>
+              
+              <div id="loginAlert" class="alert" style="display: none;"></div>
+
+              <form id="formLogin">
+                <div class="form-group">
+                  <label class="form-label">Pilih Peran Anda <span class="req">*</span></label>
+                  <div class="role-options">
+                    <label>
+                      <input type="radio" name="loginRole" value="Donatur" class="role-radio" checked>
+                      <span class="role-label">
+                        <span>🤝</span> Donatur
+                      </span>
+                    </label>
+                    <label>
+                      <input type="radio" name="loginRole" value="RT/RW" class="role-radio">
+                      <span class="role-label">
+                        <span>🏘️</span> RT / RW
+                      </span>
+                    </label>
+                  </div>
+                  <div style="margin-top: 6px;">
+                    <label>
+                      <input type="radio" name="loginRole" value="Admin" class="role-radio">
+                      <span class="role-label" style="padding: 8px;">
+                        <span>⚖️</span> Administrator Sistem
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="loginEmail" class="form-label">Email atau Username <span class="req">*</span></label>
+                  <input type="text" id="loginEmail" class="form-control" placeholder="contoh: budi@donatur.id atau admin@celengan.id" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="loginPassword" class="form-label">Password <span class="req">*</span></label>
+                  <input type="password" id="loginPassword" class="form-control" placeholder="Masukkan password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full" style="margin-top: 10px;">
+                  Masuk Sekarang
+                </button>
+              </form>
+
+              <!-- Autofill Akun Demo untuk Pengujian Cepat -->
+              <div class="demo-credentials-box">
+                <h5>⚡ Akun Demo Pengujian Cepat (Klik untuk Masuk Langsung):</h5>
+                <div class="demo-item">
+                  <div>
+                    <strong>Admin:</strong> <code>admin@celengan.id</code> / <code>admin123</code>
+                  </div>
+                  <button type="button" class="demo-btn-fill" data-email="admin@celengan.id" data-pass="admin123" data-role="Admin">
+                    ⚡ Masuk Langsung
+                  </button>
+                </div>
+                <div class="demo-item">
+                  <div>
+                    <strong>RT/RW:</strong> <code>rt01@kelurahan.id</code> / <code>rt12345</code>
+                  </div>
+                  <button type="button" class="demo-btn-fill" data-email="rt01@kelurahan.id" data-pass="rt12345" data-role="RT/RW">
+                    ⚡ Masuk Langsung
+                  </button>
+                </div>
+                <div class="demo-item">
+                  <div>
+                    <strong>Donatur:</strong> <code>budi@donatur.id</code> / <code>donatur123</code>
+                  </div>
+                  <button type="button" class="demo-btn-fill" data-email="budi@donatur.id" data-pass="donatur123" data-role="Donatur">
+                    ⚡ Masuk Langsung
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- FORM REGISTRASI (Use Case 1) -->
+            <div id="formRegisterContainer" style="display: none;">
+              <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 6px;">Pendaftaran Akun Baru</h3>
+              <p class="form-hint" style="margin-bottom: 14px;">Silakan pilih peran pendaftaran sebagai Pengurus RT/RW atau Donatur.</p>
+
+              <div id="registerAlert" class="alert" style="display: none;"></div>
+
+              <form id="formRegister">
+                <div class="form-group">
+                  <label class="form-label">Daftar Sebagai Peran <span class="req">*</span></label>
+                  <div class="role-options">
+                    <label>
+                      <input type="radio" name="regRole" value="Donatur" class="role-radio" checked>
+                      <span class="role-label">
+                        <span>🤝</span> Donatur
+                      </span>
+                    </label>
+                    <label>
+                      <input type="radio" name="regRole" value="RT/RW" class="role-radio">
+                      <span class="role-label">
+                        <span>🏘️</span> Pengurus RT/RW
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="regName" class="form-label">Nama Lengkap / Identitas Wilayah <span class="req">*</span></label>
+                  <input type="text" id="regName" class="form-control" placeholder="contoh: Donatur Dermawan / Pengurus RT 03" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="regEmail" class="form-label">Alamat Email <span class="req">*</span></label>
+                  <input type="email" id="regEmail" class="form-control" placeholder="emailanda@domain.com" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="regPassword" class="form-label">Password <span class="req">*</span></label>
+                  <input type="password" id="regPassword" class="form-control" placeholder="Minimal 6 karakter" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full" style="margin-top: 10px;">
+                  Daftar Akun Baru
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. VIEW DAFTARKAN WARGA (KHUSUS RT/RW - USE CASE 3) ================= -->
+      <section id="view-daftar-warga" class="view-section">
+        <div class="card" style="max-width: 760px; margin: 0 auto;">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">📝 Formulir Pendaftaran Warga Binaan</h2>
+              <div class="card-subtitle">Pengajuan modal usaha keluarga rentan untuk diverifikasi oleh Administrator sistem.</div>
+            </div>
+            <span class="user-badge badge-rt">Peran: RT/RW</span>
+          </div>
+
+          <div id="daftarWargaAlert" class="alert" style="display: none;"></div>
+
+          <form id="formDaftarWarga">
+            <div class="form-group">
+              <label for="wargaNama" class="form-label">Nama Lengkap Warga Calon Penerima <span class="req">*</span></label>
+              <input type="text" id="wargaNama" class="form-control" placeholder="contoh: Ibu Ratna / Pak Subandi" required>
+            </div>
+
+            <div class="form-group">
+              <label for="wargaUsaha" class="form-label">Jenis Usaha Mikro <span class="req">*</span></label>
+              <input type="text" id="wargaUsaha" class="form-control" placeholder="contoh: Usaha Gorengan Keliling / Jahit & Permak Pakaian / Warung Sarapan" required>
+            </div>
+
+            <div class="form-group">
+              <label for="wargaTarget" class="form-label">Kebutuhan Modal Usaha (Rp) <span class="req">*</span></label>
+              <input type="number" id="wargaTarget" class="form-control" placeholder="contoh: 1500000" min="10000" required>
+              <div class="form-hint">Nominal kebutuhan barang modal yang akan dibelanjakan untuk usaha.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="wargaBarang" class="form-label">Rincian Pengadaan Kebutuhan Non-Tunai <span class="req">*</span></label>
+              <textarea id="wargaBarang" class="form-control" placeholder="Sebutkan barang-barang modal usaha yang akan dibeli non-tunai (contoh: 1 wajan stainless besar, kompor mawar, regulator, minyak goreng 10L, terigu 20kg)" required></textarea>
+              <div class="form-hint">Sesuai batasan sistem: dana tidak dicairkan tunai melainkan dibelanjakan langsung untuk alat/bahan usaha.</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Foto Usaha / Calon Penerima <span class="req">*</span></label>
+              <input type="file" id="wargaFotoFile" class="form-control" accept="image/*">
+              <input type="hidden" id="wargaFotoUrl" value="">
+              <div class="form-hint">Pilih foto dari perangkat atau gunakan salah satu contoh preset di bawah ini:</div>
+
+              <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-outline btn-sm btn-preset-photo" data-url="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80">
+                  📷 Contoh Usaha Kuliner/Gorengan
+                </button>
+                <button type="button" class="btn btn-outline btn-sm btn-preset-photo" data-url="https://images.unsplash.com/photo-1528458909336-e7a0adfed0a5?w=600&auto=format&fit=crop&q=80">
+                  🧵 Contoh Usaha Jahit
+                </button>
+                <button type="button" class="btn btn-outline btn-sm btn-preset-photo" data-url="https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&auto=format&fit=crop&q=80">
+                  🔧 Contoh Bengkel Tambal Ban
+                </button>
+              </div>
+
+              <div id="wargaFotoPreviewContainer" style="display: none; margin-top: 14px;">
+                <label class="form-label">Pratinjau Foto:</label>
+                <img id="wargaFotoPreview" src="" alt="Preview Foto Usaha" style="max-height: 180px; border-radius: 8px; border: 1px solid var(--border); display: block;">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full" style="margin-top: 14px;">
+              Daftarkan Warga (Status: Pending)
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ================= 4. VIEW VERIFIKASI ADMIN (USE CASE 4) ================= -->
+      <section id="view-admin-verify" class="view-section">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">⚖️ Verifikasi Kelayakan Data Warga (Admin)</h2>
+            <div class="card-subtitle">Tinjau dan tentukan kelayakan pengajuan warga binaan yang didaftarkan oleh RT/RW.</div>
+          </div>
+          <span class="user-badge badge-admin" id="pendingCountBadge">0 Menunggu</span>
+        </div>
+
+        <div id="adminPendingWargaContainer">
+          <!-- Diisi secara dinamis oleh App.loadAdminVerify() -->
+        </div>
+      </section>
+
+      <!-- ================= 5. VIEW DASHBOARD RT/RW (USE CASE 5) ================= -->
+      <section id="view-rt-dashboard" class="view-section">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title" id="rtDashboardTitle">Dashboard Pemantauan RT/RW</h2>
+            <div class="card-subtitle">Pantau progres pengumpulan modal usaha warga binaan wilayah Anda secara real-time.</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="App.routeTo('daftar-warga')">
+            + Daftarkan Warga Baru
+          </button>
+        </div>
+
+        <!-- Ringkasan Statistik RT/RW -->
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-label">Total Warga Didaftarkan</div>
+            <div class="stat-value" id="statRtTotalWarga">0 Orang</div>
+            <div class="stat-desc">Warga binaan wilayah ini</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Total Donasi Terkumpul</div>
+            <div class="stat-value" id="statRtTotalTerkumpul">Rp 0</div>
+            <div class="stat-desc">Akumulasi donasi masyarakat</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Status Verifikasi</div>
+            <div class="stat-value" id="statRtVerifCount" style="font-size: 1.25rem;">0 Terverifikasi</div>
+            <div class="stat-desc">Hasil peninjauan Admin</div>
+          </div>
+        </div>
+
+        <!-- Kotak Notifikasi dari Admin -->
+        <div class="card">
+          <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+            🔔 Notifikasi Peninjauan dari Admin
+          </h3>
+          <div id="rtNotifList">
+            <!-- Diisi secara dinamis -->
+          </div>
+        </div>
+
+        <!-- Tabel Progres Pengumpulan Dana Warga Binaan -->
+        <div class="card">
+          <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 16px;">
+            Daftar Perkembangan Donasi Warga Binaan
+          </h3>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nama Warga & Usaha</th>
+                  <th>Status</th>
+                  <th>Progres Dana Terkumpul</th>
+                  <th>Rincian Kebutuhan Non-Tunai</th>
+                  <th>Catatan Admin</th>
+                </tr>
+              </thead>
+              <tbody id="rtWargaTableBody">
+                <!-- Diisi secara dinamis -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 6. VIEW DASHBOARD RIWAYAT DONASI DONATUR (USE CASE 7) ================= -->
+      <section id="view-donatur-dashboard" class="view-section">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title" id="donaturDashboardTitle">Riwayat Donasi Saya</h2>
+            <div class="card-subtitle">Transparansi perkembangan dan status penyaluran modal usaha yang telah Anda bantu.</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="App.routeTo('katalog')">
+            + Berdonasi Lagi
+          </button>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-label">Total Donasi Diberikan</div>
+            <div class="stat-value" id="statDonaturTotalNominal">Rp 0</div>
+            <div class="stat-desc">Kontribusi Anda untuk pengentasan kemiskinan</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Frekuensi Berbagi</div>
+            <div class="stat-value" id="statDonaturTotalTransaksi">0 Kali</div>
+            <div class="stat-desc">Transaksi donasi mikro terselesaikan</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 16px;">
+            Daftar Riwayat Bantuan Modal Usaha
+          </h3>
+          <div id="donaturHistoryContainer">
+            <!-- Diisi secara dinamis -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 7. VIEW HISTORY DONASI ADMIN (USE CASE 8) ================= -->
+      <section id="view-admin-history" class="view-section">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">📜 Seluruh Riwayat Donasi (Audit Admin)</h2>
+            <div class="card-subtitle">Pengawasan dan audit seluruh aliran dana donasi mikro masuk dari semua donatur.</div>
+          </div>
+          <span class="user-badge badge-admin">Akses Khusus Admin</span>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-label">Total Dana Donasi Mengalir</div>
+            <div class="stat-value" id="statAdminTotalDonasi">Rp 0</div>
+            <div class="stat-desc">Akumulasi seluruh transaksi donatur</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Total Transaksi</div>
+            <div class="stat-value" id="statAdminTotalTransaksi">0 Transaksi</div>
+            <div class="stat-desc">Tercatat dalam basis data sistem</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>ID Transaksi</th>
+                  <th>Waktu & Tanggal</th>
+                  <th>Nama Donatur</th>
+                  <th>Warga Penerima</th>
+                  <th>Nominal</th>
+                  <th>Metode Pembayaran</th>
+                </tr>
+              </thead>
+              <tbody id="adminHistoryTableBody">
+                <!-- Diisi secara dinamis terurut terbaru ke terlama -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================= MODAL DONASI MIKRO (USE CASE 6) ================= -->
+  <div class="modal-backdrop" id="modalDonasi" role="dialog" aria-modal="true" aria-labelledby="modalWargaName">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">Bantu Modal Usaha Mikro</h3>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Penyaluran langsung dalam bentuk sarana kerja non-tunai</div>
+        </div>
+        <button class="modal-close" aria-label="Tutup">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Profil Singkat Warga -->
+        <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+          <h4 id="modalWargaName" style="font-size: 1.05rem; font-weight: 700;">Nama Warga</h4>
+          <div id="modalWargaBusiness" style="font-size: 0.85rem; color: var(--secondary); font-weight: 600;">Jenis Usaha</div>
+          <div style="font-size: 0.8rem; margin-top: 4px; display: flex; justify-content: space-between;">
+            <span>Terkumpul: <strong id="modalWargaCollected">Rp 0</strong></span>
+            <span>Target: <strong id="modalWargaTarget">Rp 0</strong></span>
+          </div>
+          <div style="font-size: 0.75rem; color: #475569; margin-top: 6px; background: #ffffff; padding: 6px 8px; border-radius: 4px; border: 1px dashed var(--border);">
+            <strong>Pengadaan:</strong> <span id="modalWargaNonCash">-</span>
+          </div>
+        </div>
+
+        <div id="donasiAlert" class="alert" style="display: none;"></div>
+
+        <!-- LANGKAH 1: INPUT NOMINAL DONASI MIKRO -->
+        <div id="donasiStep1">
+          <label class="form-label">Pilih Nominal Donasi Cepat:</label>
+          <div class="nominal-quick-grid">
+            <button type="button" class="btn-nominal" data-amount="10000">Rp 10.000</button>
+            <button type="button" class="btn-nominal active" data-amount="25000">Rp 25.000</button>
+            <button type="button" class="btn-nominal" data-amount="50000">Rp 50.000</button>
+            <button type="button" class="btn-nominal" data-amount="100000">Rp 100.000</button>
+          </div>
+
+          <div class="form-group">
+            <label for="donasiNominalInput" class="form-label">Atau Masukkan Nominal Lain (Rp): <span class="req">*</span></label>
+            <input type="number" id="donasiNominalInput" class="form-control" value="25000" min="1000" step="1000" required>
+            <div class="form-hint">Bantuan nominal mikro (gotong royong) sangat berarti bagi permodalan UMKM keluarga rentan.</div>
+          </div>
+
+          <button type="button" class="btn btn-primary btn-full" id="btnLanjutPembayaran" style="margin-top: 12px;">
+            Lanjutkan ke Pembayaran &rarr;
+          </button>
+        </div>
+
+        <!-- LANGKAH 2: METODE PEMBAYARAN (QRIS / TRANSFER E-BANKING) -->
+        <div id="donasiStep2" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Total Donasi Anda:</label>
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary);" id="paySummaryNominal">Rp 25.000</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Pilih Metode Pembayaran: <span class="req">*</span></label>
+            <div class="role-options">
+              <label>
+                <input type="radio" name="paymentMethod" value="QRIS" class="role-radio" checked>
+                <span class="role-label">
+                  <span>📱</span> QRIS (Semua E-Wallet & Mobile Banking)
+                </span>
+              </label>
+              <label>
+                <input type="radio" name="paymentMethod" value="Transfer Bank Mandiri" class="role-radio">
+                <span class="role-label">
+                  <span>🏦</span> Transfer E-Banking Mandiri / BCA
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Tampilan Visual QRIS -->
+          <div id="paymentMethodQrisBox" class="qris-display">
+            <div class="qris-logo">QRIS</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Scan dengan BCA, Mandiri, GoPay, OVO, ShopeePay, DANA, dll.</div>
+            <div id="qrisCodeWrapper">
+              <!-- SVG QR Code QRIS dibuat secara dinamis -->
+            </div>
+          </div>
+
+          <!-- Tampilan Visual Transfer E-Banking -->
+          <div id="paymentMethodTransferBox" class="bank-info-box" style="display: none;">
+            <div style="font-weight: 700; margin-bottom: 8px; color: var(--text-main);">Instruksi Transfer E-Banking:</div>
+            <div class="bank-row">
+              <span>Bank Tujuan:</span>
+              <strong>Bank Mandiri (Persero)</strong>
+            </div>
+            <div class="bank-row">
+              <span>Nomor Rekening:</span>
+              <strong><code>137-00-1982736-4</code></strong>
+            </div>
+            <div class="bank-row">
+              <span>Atas Nama:</span>
+              <strong>Yayasan Celengan Mikro UMKM</strong>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; border-top: 1px dashed var(--border); padding-top: 6px;">
+              *Sertakan berita transfer: <em>Modal Usaha Non-Tunai</em>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-success btn-full" id="btnKonfirmasiBayar" style="margin-top: 14px;">
+            ✅ Saya Sudah Membayar (Verifikasi Pembayaran)
+          </button>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-modal-cancel">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-inner">
+      <div>
+        <strong>Celengan Mikro UMKM</strong> &copy; 2026 • Platform Donasi Mikro Non-Tunai Modal Usaha Produktif
+        <div style="font-size: 0.75rem; margin-top: 2px;">Pengembangan Berbasis Waterfall Model • SDGs 1: No Poverty</div>
+      </div>
+      <div style="font-size: 0.8rem;">
+        Transparan • Akuntabel • Tepat Sasaran
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
